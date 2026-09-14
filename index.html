@@ -42,7 +42,7 @@ footer{padding-bottom:28px;padding-left:220px}
 <div class="mini-controls">
 <div class="music-selects"><label>Category<select id="music-category"></select></label><label class="song-select">Song<select id="music-song"></select></label></div>
 <div id="music-artist"></div>
-<div class="mini-transport"><button id="drawer-open" aria-controls="music-drawer" aria-expanded="false">♫ Music</button><button id="music-prev" aria-label="Previous song">↤</button><button class="primary" id="music-play" aria-pressed="false">▶ Play</button><button id="music-next" aria-label="Next song">↦</button><label class="repeat-label"><input id="music-repeat" type="checkbox" checked>Repeat</label><label class="volume-label">Volume<input id="music-volume" type="range" min="0" max="100" value="65"></label></div>
+<div class="mini-transport"><button id="music-prev" aria-label="Previous song">↤</button><button class="primary" id="music-play" aria-pressed="false">▶ Play</button><button id="music-next" aria-label="Next song">↦</button><label class="volume-label">Volume<input id="music-volume" type="range" min="0" max="100" value="65"></label></div>
 <div class="seek-line"><input id="music-seek" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Seek within song"><span id="music-time">0:00</span></div>
 <div class="mini-status"><span id="music-status" role="status" aria-live="polite">Choose a song and press Play.</span><button id="music-retry" hidden>Retry</button><a id="music-source" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div>
 </div></section>
@@ -132,7 +132,7 @@ let index=0,mood='All',player,ready=false,wantPlay=false,loaded=false,canEnd=fal
 const unavailable=new Set();
 let apiReady=false,resumeAt=null;
 function openDrawer(){
- $('music-drawer').hidden=false;$('drawer-open').setAttribute('aria-expanded','true');
+ $('music-drawer').hidden=false;
  if(apiReady&&!player)createPlayer();
 }
 function closeDrawer(){
@@ -142,10 +142,10 @@ function closeDrawer(){
  if(player){if(ready)player.pauseVideo();player.destroy();player=null;}
  ready=false;loaded=false;
  $('music-drawer').querySelector('.mini-video-box').innerHTML='<div id="mini-video"></div>';
- $('music-drawer').hidden=true;$('drawer-open').setAttribute('aria-expanded','false');
- sync(false);say('Music paused · press Play to reopen.');$('drawer-open').focus();
+ $('music-drawer').hidden=true;
+ sync(false);say('Music paused · press Play to reopen.');$('music-play').focus();
 }
-$('drawer-open').onclick=()=>{$('music-drawer').hidden?openDrawer():closeDrawer();};$('drawer-close').onclick=closeDrawer;
+$('drawer-close').onclick=closeDrawer;
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('music-drawer').hidden)closeDrawer();});
 const ids=()=>tracks.map((t,i)=>i).filter(i=>mood==='All'||tracks[i].moods.includes(mood));
 const say=text=>{$('music-status').textContent=text;};
@@ -170,7 +170,6 @@ function advance(direction=1,automatic=false){
  const list=ids(),position=list.indexOf(index);
  for(let step=1;step<=list.length;step++){
   const next=position+direction*step;
-  if(automatic&&!$('music-repeat').checked&&next>=list.length){wantPlay=false;complete=true;player.pauseVideo();sync(false);say('Playlist complete.');return;}
   const candidate=list[(next%list.length+list.length)%list.length];
   if(!unavailable.has(tracks[candidate].video)){select(candidate,true);return;}
  }
