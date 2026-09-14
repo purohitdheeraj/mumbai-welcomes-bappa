@@ -61,9 +61,9 @@ footer{padding-bottom:28px;padding-left:220px}
 <div id="music-artist"></div>
 <div class="mini-transport"><button id="music-prev" aria-label="Previous song">↤</button><button class="primary" id="music-play" aria-pressed="false">▶ Play</button><button id="music-next" aria-label="Next song">↦</button><label class="volume-label">Volume<input id="music-volume" type="range" min="0" max="100" value="65"></label></div>
 <div class="seek-line"><input id="music-seek" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Seek within song"><span id="music-time">0:00</span></div>
-<div class="mini-status"><span id="music-status" role="status" aria-live="polite">Choose a song and press Play.</span><button id="music-retry" hidden>Retry</button><a id="music-source" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div>
+<div class="mini-status"><span id="music-status" role="status" aria-live="polite">Choose a song and press Play.</span><button id="music-retry" hidden>Retry</button><button id="music-video">Open player</button><a id="music-source" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div>
 </div></section>
-<div class="scene-wrap"><aside id="music-drawer" class="music-drawer" aria-label="Music player" aria-hidden="true" inert hidden><div class="drawer-heading"><strong>Music</strong><button id="drawer-close" aria-label="Close music and pause playback">✕</button></div><div class="mini-video-box"><div id="mini-video"></div></div><p>Closing this panel pauses the music.</p></aside><div class="scene-note">MUMBAI, WITH LOVE & MODAKS</div>
+<div class="scene-wrap"><aside id="music-drawer" class="music-drawer" aria-label="Music player" aria-hidden="true" inert hidden><div class="drawer-heading"><strong>Music</strong><button id="drawer-close" aria-label="Close music and pause playback">✕</button></div><div class="mini-video-box"><div id="mini-video"></div></div><p>Tap ▶ inside the video to enable sound. Closing pauses the music.</p></aside><div class="scene-note">MUMBAI, WITH LOVE & MODAKS</div>
 <svg class="scene" id="festival" viewBox="0 0 1440 860" role="img" aria-labelledby="sceneTitle sceneDesc" xmlns="http://www.w3.org/2000/svg">
 <title id="sceneTitle">Mumbai welcomes Ganpati Bappa</title><desc id="sceneDesc">An animated illustrated Mumbai neighborhood at sunset. Ganesha is seated under a flower-covered welcome mandap. Families greet each other, children play, dancers and dhol tasha musicians celebrate among balconies, torans, glowing lights, rangoli, and modaks. A local train, black and yellow taxi, Gateway of India and clock tower add Mumbai flavor. This is the beginning of Ganesh Chaturthi.</desc>
 <defs>
@@ -152,6 +152,14 @@ function openDrawer(){
  $('music-drawer').hidden=false;
  if(apiReady&&!player)createPlayer();
 }
+function showVideo(){
+ const drawer=$('music-drawer');
+ document.body.append(drawer);
+ drawer.removeAttribute('inert');drawer.removeAttribute('aria-hidden');
+ openDrawer();
+ say('Tap the play button inside the YouTube player to start sound.');
+}
+$('music-video').onclick=showVideo;
 function closeDrawer(){
  wantPlay=false;canEnd=false;clearTimeout(watchdog);
  if(ready&&matches())resumeAt=player.getCurrentTime();
@@ -174,7 +182,7 @@ function render(){
  $('music-source').href='https://www.youtube.com/watch?v='+tracks[index].video+'&t='+tracks[index].start+'s';
  $('music-artist').textContent=tracks[index].artist;
 }
-function arm(){clearTimeout(watchdog);watchdog=setTimeout(()=>{if(wantPlay){wantPlay=false;sync(false);say(ready?'Tap Play to start music.':'Still connecting. Reload or open the song on YouTube.');$('music-retry').hidden=false;}},15000);}
+function arm(){clearTimeout(watchdog);watchdog=setTimeout(()=>{if(wantPlay){wantPlay=false;sync(false);say(ready?'Tap Play to start music.':'Still connecting. Reload or open the song on YouTube.');if(ready)showVideo();$('music-retry').hidden=false;}},15000);}
 function matches(){return ready&&player.getVideoData().video_id===tracks[index].video;}
 function load(){
  if(!ready)return;
@@ -234,12 +242,14 @@ function createPlayer(){
  player=new YT.Player('mini-video',{width:240,height:200,videoId:tracks[index].video,playerVars:vars,events:{
   onReady:event=>{if(event.target!==player)return;ready=true;$('music-play').disabled=false;player.setVolume(Number($('music-volume').value));load();},
   onStateChange:state,onError:failure,
-  onAutoplayBlocked:()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('Tap Play to enable sound.');}
+  onAutoplayBlocked:()=>{wantPlay=false;clearTimeout(watchdog);sync(false);showVideo();}
  }});
 };
 window.onYouTubeIframeAPIReady=()=>{apiReady=true;if(!$('music-drawer').hidden)createPlayer();};
 // Try once on page load; a browser block returns control to the Play button.
-wantPlay=true;openDrawer();sync(false);$('music-play').disabled=true;say('Loading music…');arm();
+const touchDevice=window.matchMedia('(pointer: coarse)').matches;
+wantPlay=!touchDevice;openDrawer();sync(false);$('music-play').disabled=true;say('Loading music…');arm();
+if(touchDevice)showVideo();
 const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';api.onerror=()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('YouTube could not connect. Check your connection or open the song directly.');};document.head.append(api);
 setInterval(()=>{
  if(!matches())return;
