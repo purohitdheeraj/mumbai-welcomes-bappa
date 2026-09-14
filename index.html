@@ -24,6 +24,8 @@ footer{padding-bottom:28px;padding-left:220px}
 @media(max-width:1050px){.mini-controls{grid-template-columns:minmax(200px,1fr) auto}.seek-line{grid-row:2;grid-column:1}.mini-status{grid-row:2;grid-column:2}#music-artist{display:none}}
 @media(max-width:650px){.compact-music{top:4px;padding:8px}.mini-controls{grid-template-columns:1fr;gap:5px}.music-selects{grid-row:1;grid-column:1}.mini-transport{grid-row:2;grid-column:1}.volume-label{margin-left:auto}.seek-line{grid-row:3;grid-column:1}.mini-status{grid-row:4;grid-column:1;justify-content:space-between}.mini-video-box{left:8px;bottom:8px}footer{padding:8px 12px 218px}.mini-status span{overflow-wrap:anywhere}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}main{padding-top:10px}
+
+.music-drawer{position:fixed;right:12px;bottom:12px;z-index:40;width:264px;padding:12px;background:#fff8ed;border:1px solid #dfc4ac;border-radius:16px;box-shadow:0 8px 35px #493b5030}.music-drawer[hidden]{display:none}.drawer-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.drawer-heading strong{font:18px Georgia,serif}.drawer-heading button{padding:6px 10px}.music-drawer .mini-video-box{position:static;width:240px;height:200px;box-shadow:none;border-radius:8px}.music-drawer iframe{width:240px;height:200px}.music-drawer p{font-size:10px;color:#866976;margin:10px 0 0}footer{padding-left:20px;padding-right:20px;padding-bottom:28px}@media(max-width:650px){.music-drawer{right:8px;bottom:8px}.mini-transport{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -34,7 +36,7 @@ footer{padding-bottom:28px;padding-left:220px}
 <div class="mini-controls">
 <div class="music-selects"><label>Category<select id="music-category"></select></label><label class="song-select">Song<select id="music-song"></select></label></div>
 <div id="music-artist"></div>
-<div class="mini-transport"><button id="music-prev" aria-label="Previous song">↤</button><button class="primary" id="music-play" aria-pressed="false">▶ Play</button><button id="music-next" aria-label="Next song">↦</button><label class="repeat-label"><input id="music-repeat" type="checkbox" checked>Repeat</label><label class="volume-label">Volume<input id="music-volume" type="range" min="0" max="100" value="65"></label></div>
+<div class="mini-transport"><button id="drawer-open" aria-controls="music-drawer" aria-expanded="false">♫ Music</button><button id="music-prev" aria-label="Previous song">↤</button><button class="primary" id="music-play" aria-pressed="false">▶ Play</button><button id="music-next" aria-label="Next song">↦</button><label class="repeat-label"><input id="music-repeat" type="checkbox" checked>Repeat</label><label class="volume-label">Volume<input id="music-volume" type="range" min="0" max="100" value="65"></label></div>
 <div class="seek-line"><input id="music-seek" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Seek within song"><span id="music-time">0:00</span></div>
 <div class="mini-status"><span id="music-status" role="status" aria-live="polite">Choose a song and press Play.</span><button id="music-retry" hidden>Retry</button><a id="music-source" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div>
 </div></section>
@@ -70,7 +72,7 @@ footer{padding-bottom:28px;padding-left:220px}
 <!-- Welcome mandap and Ganpati, the heart of the scene. -->
 <g class="arrival"><ellipse cx="720" cy="638" rx="215" ry="30" fill="#a87980" opacity=".2"/><path d="M511 580H929L959 640H481Z" fill="#b46b75"/><path d="M490 622H950V646H490Z" fill="#854b64"/><path d="M510 605H930V621H510Z" fill="#f4c675"/><path d="M527 345H913V593H527Z" fill="#aa596b"/><path d="M554 354H886V592H554Z" fill="#ce8290"/><g stroke="#de9b9d" stroke-width="2" opacity=".65"><path d="M580 355V586M609 355V586M639 355V586M669 355V586M700 355V586M731 355V586M762 355V586M793 355V586M824 355V586M854 355V586"/></g><circle cx="720" cy="458" r="116" fill="url(#halo)"/><g class="ring" fill="none" stroke="#e9b265"><circle cx="720" cy="458" r="106" stroke-dasharray="2 10" stroke-width="6"/><circle cx="720" cy="458" r="95" stroke-width="1.5"/></g><path d="M531 351Q595 414 554 585H531ZM909 351Q847 414 886 585H909Z" fill="#91465f"/><path d="M539 474H560M880 474H901" stroke="#f5bd69" stroke-width="8"/><path d="M515 327L720 226L925 327V360H515Z" fill="url(#canopy)"/><path d="M513 327L720 220L928 327" stroke="#f1b65b" stroke-width="10" stroke-linecap="round"/><path d="M563 323L720 243L878 323" fill="none" stroke="#d7867c" stroke-width="2"/><path d="M520 360Q540 383 560 360Q580 383 600 360Q620 383 640 360Q660 383 680 360Q700 383 720 360Q740 383 760 360Q780 383 800 360Q820 383 840 360Q860 383 880 360Q900 383 920 360" fill="#d7956e"/><rect x="610" y="295" width="220" height="43" rx="21" fill="#f7d9a0"/><text x="720" y="323" text-anchor="middle" font-family="Georgia,serif" font-size="24" fill="#874659">गणपती बाप्पा मोरया!</text><path d="M720 222V164" stroke="#92705e" stroke-width="4"/><path class="flag" d="M722 164Q754 151 782 171L764 188L779 197Q750 182 722 195Z" fill="#ec904b"/><g id="mandap-flowers"></g><path d="M537 371V599M902 371V599" stroke="#eeb768" stroke-width="14"/><g id="pillars"></g>
 <!-- A hand-drawn Ganesha idol: crown, wide ears, curved trunk, blessings and modak. -->
-<g id="bappa"><ellipse cx="720" cy="585" rx="116" ry="21" fill="#723c5b"/><path d="M629 573Q649 550 672 559L719 567L764 556Q798 550 814 577Q801 599 760 594H665Q638 594 629 573" fill="#eda147"/><path d="M661 548Q677 505 688 497H753Q773 517 778 554Q755 579 720 577Q682 577 661 548" fill="#f4b888"/><path d="M675 517Q651 533 635 511L631 478" fill="none" stroke="#f4b888" stroke-width="18" stroke-linecap="round"/><path d="M765 518Q788 531 803 508L810 491" fill="none" stroke="#f4b888" stroke-width="18" stroke-linecap="round"/><ellipse cx="631" cy="473" rx="12" ry="17" fill="#f7c599"/><path d="M627 471L635 472M631 466V480" stroke="#c88b75" stroke-width="1.5"/><path d="M803 493H825" stroke="#e4ab4d" stroke-width="5" stroke-linecap="round"/><use href="#modak" x="803" y="474" width="20" height="21"/><path d="M672 422Q628 396 639 447Q643 479 676 465M765 422Q810 395 802 446Q797 478 765 465" fill="#f1af8f" stroke="#d9907d" stroke-width="3"/><path d="M667 433Q643 417 650 449L669 455M775 432Q798 418 791 449L774 455" fill="#dd8c83"/><ellipse cx="719" cy="437" rx="49" ry="53" fill="#f5bf92"/><path d="M707 455C704 485 746 482 737 508C730 527 709 516 714 505" fill="none" stroke="#f5bf92" stroke-width="23" stroke-linecap="round"/><path d="M689 456L687 477Q699 474 699 462M751 457L753 475Q742 471 742 463" fill="#fff0d4"/><path d="M686 437Q696 430 704 436M735 436Q745 430 753 437" fill="none" stroke="#745162" stroke-width="3" stroke-linecap="round"/><path d="M691 443Q697 447 701 442M739 443Q744 447 749 442" fill="none" stroke="#6e4a56" stroke-width="2"/><path d="M717 420L720 435L723 420" fill="#b94e55"/><circle cx="720" cy="415" r="3" fill="#b94e55"/><path d="M676 405L684 379L701 386L720 353L739 386L756 379L764 405Z" fill="#eeb64e" stroke="#b67b47" stroke-width="2"/><path d="M678 405Q720 416 762 405" stroke="#ffde87" stroke-width="8" fill="none"/><circle cx="720" cy="386" r="8" fill="#b66068"/><circle cx="720" cy="386" r="4" fill="#f8dba0"/><path d="M684 499Q683 551 721 553Q759 551 758 498" stroke="#fff0c3" stroke-width="10" fill="none" stroke-dasharray="3 7"/><path d="M688 499Q689 540 709 540M753 499Q752 540 734 540" stroke="#e68b39" stroke-width="9" fill="none" stroke-dasharray="2 7"/><path d="M686 567Q716 578 746 565L754 591H689Z" fill="#f8ca68"/><path d="M703 574L700 590M718 576V592M733 574L737 591" stroke="#d89746" stroke-width="2"/></g>
+<g id="bappa"><path d="M692 465Q719 454 746 465L756 519Q720 537 683 519Z" fill="#f4b888"/><ellipse cx="720" cy="585" rx="116" ry="21" fill="#723c5b"/><path d="M629 573Q649 550 672 559L719 567L764 556Q798 550 814 577Q801 599 760 594H665Q638 594 629 573" fill="#eda147"/><path d="M661 548Q677 505 688 497H753Q773 517 778 554Q755 579 720 577Q682 577 661 548" fill="#f4b888"/><path d="M675 517Q651 533 635 511L631 478" fill="none" stroke="#f4b888" stroke-width="18" stroke-linecap="round"/><path d="M765 518Q788 531 803 508L810 491" fill="none" stroke="#f4b888" stroke-width="18" stroke-linecap="round"/><ellipse cx="631" cy="473" rx="12" ry="17" fill="#f7c599"/><path d="M627 471L635 472M631 466V480" stroke="#c88b75" stroke-width="1.5"/><path d="M803 493H825" stroke="#e4ab4d" stroke-width="5" stroke-linecap="round"/><use href="#modak" x="803" y="474" width="20" height="21"/><path d="M672 422Q628 396 639 447Q643 479 676 465M765 422Q810 395 802 446Q797 478 765 465" fill="#f1af8f" stroke="#d9907d" stroke-width="3"/><path d="M667 433Q643 417 650 449L669 455M775 432Q798 418 791 449L774 455" fill="#dd8c83"/><ellipse cx="719" cy="437" rx="49" ry="53" fill="#f5bf92"/><path d="M707 455C704 485 746 482 737 508C730 527 709 516 714 505" fill="none" stroke="#f5bf92" stroke-width="23" stroke-linecap="round"/><path d="M689 456L687 477Q699 474 699 462M751 457L753 475Q742 471 742 463" fill="#fff0d4"/><path d="M686 437Q696 430 704 436M735 436Q745 430 753 437" fill="none" stroke="#745162" stroke-width="3" stroke-linecap="round"/><path d="M691 443Q697 447 701 442M739 443Q744 447 749 442" fill="none" stroke="#6e4a56" stroke-width="2"/><path d="M717 420L720 435L723 420" fill="#b94e55"/><circle cx="720" cy="415" r="3" fill="#b94e55"/><path d="M676 405L684 379L701 386L720 353L739 386L756 379L764 405Z" fill="#eeb64e" stroke="#b67b47" stroke-width="2"/><path d="M678 405Q720 416 762 405" stroke="#ffde87" stroke-width="8" fill="none"/><circle cx="720" cy="386" r="8" fill="#b66068"/><circle cx="720" cy="386" r="4" fill="#f8dba0"/><path d="M684 499Q683 551 721 553Q759 551 758 498" stroke="#fff0c3" stroke-width="10" fill="none" stroke-dasharray="3 7"/><path d="M688 499Q689 540 709 540M753 499Q752 540 734 540" stroke="#e68b39" stroke-width="9" fill="none" stroke-dasharray="2 7"/><path d="M686 567Q716 578 746 565L754 591H689Z" fill="#f8ca68"/><path d="M703 574L700 590M718 576V592M733 574L737 591" stroke="#d89746" stroke-width="2"/></g>
 <g fill="#e9ae51"><path d="M578 590H606L600 583V553H585V583Z"/><ellipse cx="592" cy="553" rx="17" ry="4"/><path d="M834 590H863L855 583V553H842V583Z"/><ellipse cx="848" cy="553" rx="17" ry="4"/></g><g class="twinkle" fill="#fff1a5"><path d="M592 549Q583 537 592 528Q600 540 592 549M848 549Q839 537 848 528Q856 540 848 549"/></g><ellipse cx="720" cy="611" rx="38" ry="7" fill="#e8b15c"/><use href="#modak" x="694" y="588" width="22" height="24"/><use href="#modak" x="714" y="583" width="25" height="28"/><use href="#modak" x="735" y="590" width="20" height="23"/></g>
 <!-- Rangoli laid for the welcome. -->
 <g transform="translate(724 750) scale(1 .43)"><circle r="125" fill="#fae5c4" opacity=".6"/><g id="rangoli"></g><circle r="29" fill="#ae6280"/><circle r="17" fill="#f5c065"/><g fill="#fff0cd"><circle cy="-7" r="4"/><circle cx="7" cy="3" r="4"/><circle cx="-7" cy="3" r="4"/></g></g>
@@ -96,7 +98,7 @@ footer{padding-bottom:28px;padding-left:220px}
 </svg></div><div class="mobile-hint">Swipe across the scene to explore the whole neighborhood →</div>
 <div class="controls"><div class="caption">New beginnings. Old friends. Endless modaks.<small>Flowers in the air, joy in every window. Bappa has arrived.</small></div><div class="buttons"><button class="primary" id="flowers">✿ Shower flowers</button><button id="pause" aria-pressed="false">Ⅱ Pause</button><button id="evening" aria-pressed="false">☾ Evening lights</button></div></div><div id="live" role="status" aria-live="polite"></div>
 </main>
-<div class="mini-video-box"><div id="mini-video"></div></div><footer>Made by <a href="https://x.com/the_indianyoga" target="_blank" rel="noopener noreferrer" style="color:inherit;text-underline-offset:3px">@the_indianyoga</a> · गणपती बाप्पा मोरया</footer>
+<aside id="music-drawer" class="music-drawer" aria-label="Music player" hidden><div class="drawer-heading"><strong>Music</strong><button id="drawer-close" aria-label="Close music and pause playback">✕</button></div><div class="mini-video-box"><div id="mini-video"></div></div><p>Closing this panel pauses the music.</p></aside><footer>Made by <a href="https://x.com/the_indianyoga" target="_blank" rel="noopener noreferrer" style="color:inherit;text-underline-offset:3px">@the_indianyoga</a> · गणपती बाप्पा मोरया</footer>
 <script>
 (()=>{'use strict';
 const ns='http://www.w3.org/2000/svg',svg=document.getElementById('festival');const add=(id,tag,attrs)=>{const el=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,v);document.getElementById(id).appendChild(el);return el};const flower=(id,x,y,s=18)=>add(id,'use',{href:'#marigold',x:x-s/2,y:y-s/2,width:s,height:s});
@@ -122,6 +124,23 @@ const tracks=[{"title": "Deva Shree Ganesha", "artist": "Ajay Gogavale · Agneep
 const moods=['All','Devotional','Dhol-tasha','Rocking','Bollywood','Meditation','Mantra','Festival'];
 let index=0,mood='All',player,ready=false,wantPlay=false,loaded=false,canEnd=false,complete=false,watchdog,seekDragging=false;
 const unavailable=new Set();
+let apiReady=false,resumeAt=null;
+function openDrawer(){
+ $('music-drawer').hidden=false;$('drawer-open').setAttribute('aria-expanded','true');
+ if(apiReady&&!player)createPlayer();
+}
+function closeDrawer(){
+ wantPlay=false;canEnd=false;clearTimeout(watchdog);
+ if(ready&&matches())resumeAt=player.getCurrentTime();
+ // Remove the iframe before hiding the drawer, so audio cannot continue hidden.
+ if(player){if(ready)player.pauseVideo();player.destroy();player=null;}
+ ready=false;loaded=false;
+ $('music-drawer').querySelector('.mini-video-box').innerHTML='<div id="mini-video"></div>';
+ $('music-drawer').hidden=true;$('drawer-open').setAttribute('aria-expanded','false');
+ sync(false);say('Music paused · press Play to reopen.');$('drawer-open').focus();
+}
+$('drawer-open').onclick=openDrawer;$('drawer-close').onclick=closeDrawer;
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('music-drawer').hidden)closeDrawer();});
 const ids=()=>tracks.map((t,i)=>i).filter(i=>mood==='All'||tracks[i].moods.includes(mood));
 const say=text=>{$('music-status').textContent=text;};
 const format=n=>{n=Math.max(0,Math.floor(n||0));return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
@@ -137,10 +156,10 @@ function matches(){return ready&&player.getVideoData().video_id===tracks[index].
 function load(){
  if(!ready)return;
  loaded=true;canEnd=false;complete=false;
- const t=tracks[index],request={videoId:t.video,startSeconds:t.start};if(t.end!==null)request.endSeconds=t.end;
+ const t=tracks[index],request={videoId:t.video,startSeconds:resumeAt??t.start};if(t.end!==null)request.endSeconds=t.end;
  if(wantPlay){say('Loading '+t.title+'…');arm();player.loadVideoById(request);}else{player.cueVideoById(request);say('Ready · press Play.');}
 }
-function select(i,play){index=i;wantPlay=play;loaded=false;canEnd=false;complete=false;$('music-retry').hidden=true;$('music-seek').value=0;$('music-time').textContent='0:00';sync(false);render();if(ready)load();else say('Connecting to YouTube…');}
+function select(i,play){resumeAt=null;if(play)openDrawer();index=i;wantPlay=play;loaded=false;canEnd=false;complete=false;$('music-retry').hidden=true;$('music-seek').value=0;$('music-time').textContent='0:00';sync(false);render();if(ready)load();else say('Connecting to YouTube…');}
 function advance(direction=1,automatic=false){
  const list=ids(),position=list.indexOf(index);
  for(let step=1;step<=list.length;step++){
@@ -153,7 +172,7 @@ function advance(direction=1,automatic=false){
 }
 $('music-play').onclick=()=>{
  if(wantPlay){wantPlay=false;clearTimeout(watchdog);if(ready)player.pauseVideo();sync(false);say('Paused.');return;}
- wantPlay=true;
+ openDrawer();wantPlay=true;
  if(!ready){say('Connecting… press Pause to cancel.');sync(true);return;}
  if(complete||!loaded){load();return;}
  player.playVideo();say('Starting music…');arm();
@@ -167,13 +186,14 @@ $('music-volume').oninput=()=>{if(ready)player.setVolume(Number($('music-volume'
 $('music-seek').oninput=()=>{seekDragging=true;$('music-time').textContent=format(Number($('music-seek').value));};
 $('music-seek').onchange=()=>{seekDragging=false;if(ready&&matches())player.seekTo(tracks[index].start+Number($('music-seek').value),true);};
 function state(event){
- if(!matches())return;
+ if($('music-drawer').hidden||!matches())return;
  if(event.data===1){canEnd=true;wantPlay=true;clearTimeout(watchdog);sync(true);say('Playing');$('music-retry').hidden=true;}
  else if(event.data===2){sync(false);/* A pause emitted while loading must not cancel the requested song. */if(canEnd){wantPlay=false;clearTimeout(watchdog);say('Paused.');}}
  else if(event.data===0&&canEnd){canEnd=false;advance(1,true);}
  else if(event.data===3&&wantPlay){say('Buffering…');arm();}
 }
 function failure(event){
+ if($('music-drawer').hidden)return;
  clearTimeout(watchdog);sync(false);canEnd=false;$('music-retry').hidden=false;
  if(event.data===153){wantPlay=false;say('YouTube requires a hosted page with a valid referrer. Open the deployed website or the song on YouTube.');return;}
  if([100,101,150].includes(event.data)){
@@ -184,15 +204,16 @@ function failure(event){
  wantPlay=false;say('Playback failed. Try Retry, Next, or open the song on YouTube.');
 }
 render();sync(false);say('Choose a song and press Play.');
-window.onYouTubeIframeAPIReady=()=>{
+function createPlayer(){
  const vars={playsinline:1,autoplay:0,controls:1,rel:0};
  if(/^https?:$/.test(location.protocol))vars.origin=location.origin;
- player=new YT.Player('mini-video',{width:200,height:200,videoId:tracks[0].video,playerVars:vars,events:{
-  onReady:()=>{ready=true;player.setVolume(Number($('music-volume').value));load();},
+ player=new YT.Player('mini-video',{width:240,height:200,videoId:tracks[index].video,playerVars:vars,events:{
+  onReady:event=>{if(event.target!==player)return;ready=true;player.setVolume(Number($('music-volume').value));load();},
   onStateChange:state,onError:failure,
   onAutoplayBlocked:()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('Press Play again to enable sound.');}
  }});
 };
+window.onYouTubeIframeAPIReady=()=>{apiReady=true;if(!$('music-drawer').hidden)createPlayer();};
 const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';api.onerror=()=>say('YouTube could not connect. Check your connection or open the song directly.');document.head.append(api);
 setInterval(()=>{
  if(!matches())return;
