@@ -26,6 +26,12 @@ footer{padding-bottom:28px;padding-left:220px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}main{padding-top:10px}
 
 .music-drawer{position:fixed;right:12px;bottom:12px;z-index:40;width:264px;padding:12px;background:#fff8ed;border:1px solid #dfc4ac;border-radius:16px;box-shadow:0 8px 35px #493b5030}.music-drawer[hidden]{display:none}.drawer-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.drawer-heading strong{font:18px Georgia,serif}.drawer-heading button{padding:6px 10px}.music-drawer .mini-video-box{position:static;width:240px;height:200px;box-shadow:none;border-radius:8px}.music-drawer iframe{width:240px;height:200px}.music-drawer p{font-size:10px;color:#866976;margin:10px 0 0}footer{padding-left:20px;padding-right:20px;padding-bottom:28px}@media(max-width:650px){.music-drawer{right:8px;bottom:8px}.mini-transport{flex-wrap:wrap}}
+
+/* Keep the transport above the artwork and its media layer underneath. */
+.scene-wrap{isolation:isolate}
+.scene-wrap .scene{position:relative;z-index:2}
+.scene-note{z-index:3}
+.scene-wrap .music-drawer{position:absolute;top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);z-index:1;pointer-events:none}
 </style>
 </head>
 <body>
@@ -40,7 +46,7 @@ footer{padding-bottom:28px;padding-left:220px}
 <div class="seek-line"><input id="music-seek" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Seek within song"><span id="music-time">0:00</span></div>
 <div class="mini-status"><span id="music-status" role="status" aria-live="polite">Choose a song and press Play.</span><button id="music-retry" hidden>Retry</button><a id="music-source" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div>
 </div></section>
-<div class="scene-wrap"><div class="scene-note">MUMBAI, WITH LOVE & MODAKS</div>
+<div class="scene-wrap"><aside id="music-drawer" class="music-drawer" aria-label="Music player" aria-hidden="true" inert hidden><div class="drawer-heading"><strong>Music</strong><button id="drawer-close" aria-label="Close music and pause playback">✕</button></div><div class="mini-video-box"><div id="mini-video"></div></div><p>Closing this panel pauses the music.</p></aside><div class="scene-note">MUMBAI, WITH LOVE & MODAKS</div>
 <svg class="scene" id="festival" viewBox="0 0 1440 860" role="img" aria-labelledby="sceneTitle sceneDesc" xmlns="http://www.w3.org/2000/svg">
 <title id="sceneTitle">Mumbai welcomes Ganpati Bappa</title><desc id="sceneDesc">An animated illustrated Mumbai neighborhood at sunset. Ganesha is seated under a flower-covered welcome mandap. Families greet each other, children play, dancers and dhol tasha musicians celebrate among balconies, torans, glowing lights, rangoli, and modaks. A local train, black and yellow taxi, Gateway of India and clock tower add Mumbai flavor. This is the beginning of Ganesh Chaturthi.</desc>
 <defs>
@@ -98,7 +104,7 @@ footer{padding-bottom:28px;padding-left:220px}
 </svg></div><div class="mobile-hint">Swipe across the scene to explore the whole neighborhood →</div>
 <div class="controls"><div class="caption">New beginnings. Old friends. Endless modaks.<small>Flowers in the air, joy in every window. Bappa has arrived.</small></div><div class="buttons"><button class="primary" id="flowers">✿ Shower flowers</button><button id="pause" aria-pressed="false">Ⅱ Pause</button><button id="evening" aria-pressed="false">☾ Evening lights</button></div></div><div id="live" role="status" aria-live="polite"></div>
 </main>
-<aside id="music-drawer" class="music-drawer" aria-label="Music player" hidden><div class="drawer-heading"><strong>Music</strong><button id="drawer-close" aria-label="Close music and pause playback">✕</button></div><div class="mini-video-box"><div id="mini-video"></div></div><p>Closing this panel pauses the music.</p></aside><footer>Made by <a href="https://x.com/the_indianyoga" target="_blank" rel="noopener noreferrer" style="color:inherit;text-underline-offset:3px">@the_indianyoga</a> · गणपती बाप्पा मोरया</footer>
+<footer>Made by <a href="https://x.com/the_indianyoga" target="_blank" rel="noopener noreferrer" style="color:inherit;text-underline-offset:3px">@the_indianyoga</a> · गणपती बाप्पा मोरया</footer>
 <script>
 (()=>{'use strict';
 const ns='http://www.w3.org/2000/svg',svg=document.getElementById('festival');const add=(id,tag,attrs)=>{const el=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,v);document.getElementById(id).appendChild(el);return el};const flower=(id,x,y,s=18)=>add(id,'use',{href:'#marigold',x:x-s/2,y:y-s/2,width:s,height:s});
@@ -132,14 +138,14 @@ function openDrawer(){
 function closeDrawer(){
  wantPlay=false;canEnd=false;clearTimeout(watchdog);
  if(ready&&matches())resumeAt=player.getCurrentTime();
- // Remove the iframe before hiding the drawer, so audio cannot continue hidden.
+ // Destroy the media instance when closing music to stop playback.
  if(player){if(ready)player.pauseVideo();player.destroy();player=null;}
  ready=false;loaded=false;
  $('music-drawer').querySelector('.mini-video-box').innerHTML='<div id="mini-video"></div>';
  $('music-drawer').hidden=true;$('drawer-open').setAttribute('aria-expanded','false');
  sync(false);say('Music paused · press Play to reopen.');$('drawer-open').focus();
 }
-$('drawer-open').onclick=openDrawer;$('drawer-close').onclick=closeDrawer;
+$('drawer-open').onclick=()=>{$('music-drawer').hidden?openDrawer():closeDrawer();};$('drawer-close').onclick=closeDrawer;
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('music-drawer').hidden)closeDrawer();});
 const ids=()=>tracks.map((t,i)=>i).filter(i=>mood==='All'||tracks[i].moods.includes(mood));
 const say=text=>{$('music-status').textContent=text;};
