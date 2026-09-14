@@ -216,11 +216,13 @@ function createPlayer(){
  player=new YT.Player('mini-video',{width:240,height:200,videoId:tracks[index].video,playerVars:vars,events:{
   onReady:event=>{if(event.target!==player)return;ready=true;player.setVolume(Number($('music-volume').value));load();},
   onStateChange:state,onError:failure,
-  onAutoplayBlocked:()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('Press Play again to enable sound.');}
+  onAutoplayBlocked:()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('Tap Play to enable sound.');}
  }});
 };
 window.onYouTubeIframeAPIReady=()=>{apiReady=true;if(!$('music-drawer').hidden)createPlayer();};
-const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';api.onerror=()=>say('YouTube could not connect. Check your connection or open the song directly.');document.head.append(api);
+// Try once on page load; a browser block returns control to the Play button.
+wantPlay=true;openDrawer();sync(true);say('Starting music… press Pause to cancel.');arm();
+const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';api.onerror=()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('YouTube could not connect. Check your connection or open the song directly.');};document.head.append(api);
 setInterval(()=>{
  if(!matches())return;
  const t=tracks[index],end=t.end??player.getDuration(),duration=Math.max(0,end-t.start),elapsed=Math.max(0,player.getCurrentTime()-t.start);
