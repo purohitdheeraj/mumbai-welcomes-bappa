@@ -46,6 +46,15 @@ footer{padding-bottom:28px;padding-left:220px}
 .scene-wrap .scene{position:relative;z-index:2}
 .scene-note{z-index:3}
 .scene-wrap .music-drawer{position:absolute;top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);z-index:1;pointer-events:none}
+/* Compact touch-player panel, keeping the video viewport usable. */
+@media(max-width:650px),(pointer:coarse){
+ body>.music-drawer{width:212px;padding:5px;right:8px;bottom:8px;border-radius:10px}
+ body>.music-drawer .mini-video-box,body>.music-drawer iframe{width:200px;height:200px}
+ body>.music-drawer .drawer-heading{margin:0 0 4px;min-height:24px}
+ body>.music-drawer .drawer-heading strong{font:11px system-ui}
+ body>.music-drawer .drawer-heading button{padding:2px 7px;min-height:24px}
+ body>.music-drawer p{display:none}
+}
 </style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
