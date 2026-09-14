@@ -176,7 +176,7 @@ function matches(){return ready&&player.getVideoData().video_id===tracks[index].
 function load(){
  if(!ready)return;
  loaded=true;canEnd=false;complete=false;
- const t=tracks[index],request={videoId:t.video,startSeconds:resumeAt??t.start};if(t.end!==null)request.endSeconds=t.end;
+ const t=tracks[index],request={videoId:t.video,startSeconds:resumeAt??(t.start+2)};if(t.end!==null)request.endSeconds=t.end;
  if(wantPlay){say('Loading '+t.title+'…');arm();player.loadVideoById(request);}else{player.cueVideoById(request);say('Ready · press Play.');}
 }
 function select(i,play){resumeAt=null;if(play)openDrawer();index=i;wantPlay=play;loaded=false;canEnd=false;complete=false;$('music-retry').hidden=true;$('music-seek').value=0;$('music-time').textContent='0:00';sync(false);render();if(ready)load();else say('Connecting to YouTube…');}
