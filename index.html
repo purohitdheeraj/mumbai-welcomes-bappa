@@ -174,7 +174,7 @@ function render(){
  $('music-source').href='https://www.youtube.com/watch?v='+tracks[index].video+'&t='+tracks[index].start+'s';
  $('music-artist').textContent=tracks[index].artist;
 }
-function arm(){clearTimeout(watchdog);watchdog=setTimeout(()=>{if(wantPlay){say('Still connecting. Try Retry or open the song on YouTube.');$('music-retry').hidden=false;}},15000);}
+function arm(){clearTimeout(watchdog);watchdog=setTimeout(()=>{if(wantPlay){wantPlay=false;sync(false);say(ready?'Tap Play to start music.':'Still connecting. Reload or open the song on YouTube.');$('music-retry').hidden=false;}},15000);}
 function matches(){return ready&&player.getVideoData().video_id===tracks[index].video;}
 function load(){
  if(!ready)return;
@@ -193,11 +193,12 @@ function advance(direction=1,automatic=false){
  wantPlay=false;sync(false);say('No playable songs remain in this category. Choose another category or Retry.');$('music-retry').hidden=false;
 }
 $('music-play').onclick=()=>{
- if(wantPlay){wantPlay=false;clearTimeout(watchdog);if(ready)player.pauseVideo();sync(false);say('Paused.');return;}
+ if(ready&&player.getPlayerState()===1){wantPlay=false;clearTimeout(watchdog);player.pauseVideo();sync(false);say('Paused.');return;}
  openDrawer();wantPlay=true;
- if(!ready){say('Connecting… press Pause to cancel.');sync(true);return;}
+ if(!ready){wantPlay=false;say('Music is loading · tap Play when ready.');sync(false);return;}
+ player.unMute();player.setVolume(Number($('music-volume').value));
  if(complete||!loaded){load();return;}
- player.playVideo();say('Starting music…');arm();
+ say('Starting music…');arm();player.playVideo();
 };
 $('music-next').onclick=()=>advance();$('music-prev').onclick=()=>advance(-1);
 $('music-retry').onclick=()=>{unavailable.delete(tracks[index].video);select(index,true);};
@@ -227,17 +228,18 @@ function failure(event){
 }
 render();sync(false);say('Choose a song and press Play.');
 function createPlayer(){
+ $('music-play').disabled=true;
  const vars={playsinline:1,autoplay:0,controls:1,rel:0};
  if(/^https?:$/.test(location.protocol))vars.origin=location.origin;
  player=new YT.Player('mini-video',{width:240,height:200,videoId:tracks[index].video,playerVars:vars,events:{
-  onReady:event=>{if(event.target!==player)return;ready=true;player.setVolume(Number($('music-volume').value));load();},
+  onReady:event=>{if(event.target!==player)return;ready=true;$('music-play').disabled=false;player.setVolume(Number($('music-volume').value));load();},
   onStateChange:state,onError:failure,
   onAutoplayBlocked:()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('Tap Play to enable sound.');}
  }});
 };
 window.onYouTubeIframeAPIReady=()=>{apiReady=true;if(!$('music-drawer').hidden)createPlayer();};
 // Try once on page load; a browser block returns control to the Play button.
-wantPlay=true;openDrawer();sync(true);say('Starting music… press Pause to cancel.');arm();
+wantPlay=true;openDrawer();sync(false);$('music-play').disabled=true;say('Loading music…');arm();
 const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';api.onerror=()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('YouTube could not connect. Check your connection or open the song directly.');};document.head.append(api);
 setInterval(()=>{
  if(!matches())return;
