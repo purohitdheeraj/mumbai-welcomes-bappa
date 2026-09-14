@@ -61,6 +61,12 @@ footer{padding-bottom:28px;padding-left:220px}
  body>.music-drawer .drawer-heading strong{display:none}
  body>.music-drawer .drawer-heading button{background:#fff8ed;padding:1px 7px;min-height:22px}
 }
+/* Smallest usable video viewport with no surrounding panel space. */
+body>.music-drawer{width:202px;padding:0;right:8px;bottom:8px;border-radius:8px}
+body>.music-drawer .mini-video-box,body>.music-drawer iframe{width:200px;height:200px}
+body>.music-drawer .drawer-heading{position:absolute;right:0;bottom:100%;margin:0 0 3px;min-height:0}
+body>.music-drawer .drawer-heading strong,body>.music-drawer p{display:none}
+body>.music-drawer .drawer-heading button{background:#fff8ed;padding:1px 7px;min-height:22px}
 </style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
@@ -261,10 +267,8 @@ function createPlayer(){
  }});
 };
 window.onYouTubeIframeAPIReady=()=>{apiReady=true;if(!$('music-drawer').hidden)createPlayer();};
-// Try once on page load; a browser block returns control to the Play button.
-const touchDevice=window.matchMedia('(pointer: coarse)').matches;
-wantPlay=!touchDevice;openDrawer();sync(false);$('music-play').disabled=true;say('Loading music…');arm();
-if(touchDevice)showVideo();
+// Prepare the player without starting playback or showing a floating panel.
+wantPlay=false;openDrawer();sync(false);$('music-play').disabled=true;say('Loading music controls…');
 const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';api.onerror=()=>{wantPlay=false;clearTimeout(watchdog);sync(false);say('YouTube could not connect. Check your connection or open the song directly.');};document.head.append(api);
 setInterval(()=>{
  if(!matches())return;
