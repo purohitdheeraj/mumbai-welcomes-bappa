@@ -9,12 +9,18 @@
 .music{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:#f6eadb;border:1px solid #e2cbb4;border-radius:18px;padding:17px 20px;margin:0 0 22px}.music-copy{flex:1;min-width:170px}.music-copy strong{font:18px Georgia,serif;display:block}.music-copy p{font-size:11px;color:#876c70;margin:6px 0 0}.music label.choose{display:inline-block;cursor:pointer;border:1px solid #cdb49d;background:#fffbf2;padding:11px 16px;border-radius:24px;font-size:11px}.music audio{max-width:100%;width:310px;height:38px}.loop-label{font-size:11px;display:flex;align-items:center;gap:5px}.audio-picker{position:absolute;width:1px;height:1px;opacity:0}.music label.choose:has(input:focus-visible){outline:3px solid #95617d;outline-offset:3px}#track-name{overflow-wrap:anywhere}.music-error{color:#a34643!important}
 
 .jukebox{background:#f6eadb;border:1px solid #dfc4ac;border-radius:20px;padding:22px;margin:0 0 25px;--plyr-color-main:#92526b}.jukebox h2{font:27px Georgia,serif;margin:0 0 6px}.jukebox p{font-size:12px;line-height:1.7;color:#876c70;margin:0 0 15px}.jukebox-layout{display:grid;grid-template-columns:minmax(300px,1fr) minmax(280px,1fr);gap:24px}.player-shell{min-width:0;align-self:start}.player-shell .plyr{border-radius:13px;overflow:hidden}.player-shell iframe{width:100%;min-height:220px;border:0;aspect-ratio:16/9}.music-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.song-queue{list-style:none;padding:0;margin:0;max-height:345px;overflow:auto;scrollbar-color:#c39493 transparent}.song-queue li{margin:0 0 5px}.song-queue button{width:100%;text-align:left;display:flex;align-items:center;gap:12px;border-radius:10px;padding:10px 12px;background:#fff8ed;border-color:transparent;font-size:12px}.song-queue button[aria-current="true"]{background:#79475e;color:#fff2d9}.song-queue .number{font-size:10px;opacity:.65}.song-queue small{display:block;font-size:10px;opacity:.72;margin-top:4px}.source-link{font-size:11px;color:#75475d}.music-credit{font-size:10px!important;margin:14px 0 0!important}.music-credit a{color:inherit}.play-status{min-height:36px}#now-playing{font:19px Georgia,serif;margin:14px 0 5px}.fallback{font-size:11px;color:#92526b;line-height:1.7}.jukebox .loop-label{padding:5px}.music{display:none}@media(max-width:750px){.jukebox{padding:16px}.jukebox-layout{grid-template-columns:1fr}.song-queue{max-height:250px}}
+
+.top-music{position:sticky;top:8px;z-index:10;background:#fff8edfa;border:1px solid #d8bfa8;box-shadow:0 7px 25px #713e5815;border-radius:18px;padding:14px 18px;margin:0 0 16px;backdrop-filter:blur(12px)}.top-music-line{display:flex;align-items:center;gap:14px}.top-music .primary{font-size:14px;font-weight:650;min-width:150px;min-height:46px}.top-song-copy{flex:1;min-width:0}.top-song-copy strong{display:block;font:18px Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top-song-copy span{display:block;font-size:10px;color:#866976;line-height:1.5;margin-top:4px}.mood-filters{display:flex;gap:6px;overflow-x:auto;padding:12px 0 1px}.mood-filters button{flex-shrink:0;font-size:11px;padding:8px 13px}.mood-filters button[aria-pressed="true"]{background:#e9cbb6;border-color:#b87b79;color:#633e55}.jukebox{scroll-margin-top:155px}.song-queue button small{line-height:1.5}button:disabled{cursor:wait;opacity:.65}@media(max-width:650px){.top-music{top:4px;padding:10px}.top-music-line{gap:8px;flex-wrap:wrap}.top-music .primary{min-width:128px;font-size:12px}.top-song-copy{flex-basis:calc(100% - 145px)}.top-song-copy strong{font-size:15px}.top-music-line>a{margin-left:auto}.mood-filters{padding-top:8px}.jukebox{scroll-margin-top:200px}}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
 </head>
 <body>
 <header><div><div class="eyebrow">A little Mumbai magic • गणेश चतुर्थी</div><h1 class="title">Welcome home, <em>Bappa.</em></h1><p>The lanes are dressed. The dhols are calling. Let the celebrations begin.</p></div><div class="date"><span>✺</span> Day one · A joyful arrival</div></header>
 <main>
+<section class="top-music" aria-label="Quick music controls">
+ <div class="top-music-line"><button class="primary" id="top-music-play" aria-label="Play music" aria-pressed="false">▶ Play music</button><div class="top-song-copy"><strong id="top-song-title">Deva Shree Ganesha</strong><span id="top-music-status" role="status" aria-live="polite">Tap play to welcome Bappa with music</span></div><button id="top-music-next" aria-label="Next song">Next ↦</button><a href="#music-library" class="source-link">Songs ↓</a></div>
+ <div class="mood-filters" id="mood-filters" role="group" aria-label="Music mood"></div>
+</section>
 <div class="scene-wrap"><div class="scene-note">MUMBAI, WITH LOVE & MODAKS</div>
 <svg class="scene" id="festival" viewBox="0 0 1440 860" role="img" aria-labelledby="sceneTitle sceneDesc" xmlns="http://www.w3.org/2000/svg">
 <title id="sceneTitle">Mumbai welcomes Ganpati Bappa</title><desc id="sceneDesc">An animated illustrated Mumbai neighborhood at sunset. Ganesha is seated under a flower-covered welcome mandap. Families greet each other, children play, dancers and dhol tasha musicians celebrate among balconies, torans, glowing lights, rangoli, and modaks. A local train, black and yellow taxi, Gateway of India and clock tower add Mumbai flavor. This is the beginning of Ganesh Chaturthi.</desc>
@@ -71,7 +77,7 @@
 <g fill="#84586c" font-family="Georgia,serif" font-size="25"><text x="360" y="599" class="note">♪</text><text x="479" y="555" class="note" style="animation-delay:.7s">♫</text><text x="972" y="561" class="note" style="animation-delay:1.3s">♪</text></g>
 <g id="petals" pointer-events="none"></g><g id="burst" pointer-events="none"></g>
 </svg></div><div class="mobile-hint">Swipe across the scene to explore the whole neighborhood →</div>
-<div class="controls"><div class="caption">New beginnings. Old friends. Endless modaks.<small>Flowers in the air, joy in every window. Bappa has arrived.</small></div><div class="buttons"><button class="primary" id="flowers">✿ Shower flowers</button><button id="pause" aria-pressed="false">Ⅱ Pause</button><button id="evening" aria-pressed="false">☾ Evening lights</button></div></div><section class="jukebox" aria-label="Ganpati music playlist"><h2>Bappa’s welcome playlist ♫</h2><p>12 Ganesh songs &amp; aartis, ready to play. No files to choose. Songs continue automatically.</p><div class="jukebox-layout"><div class="player-shell"><div id="ganpati-player" class="plyr__video-embed"><iframe title="Official Ganesh music player" src="https://www.youtube.com/embed/4_gzjySeVTA?enablejsapi=1&amp;playsinline=1&amp;rel=0&amp;autoplay=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div id="now-playing">Shendur Laal Chadhayo</div><p id="music-status" class="play-status" role="status" aria-live="polite">Connecting to music… If sound doesn’t start, tap Play music once.</p><div class="music-actions"><button id="music-prev" aria-label="Previous song">↤ Previous</button><button class="primary" id="music-play">▶ Play music</button><button id="music-next" aria-label="Next song">Next ↦</button><label class="loop-label"><input type="checkbox" id="queue-loop" checked>Repeat playlist</label></div><a class="source-link" id="music-source" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=4_gzjySeVTA">Open this song on YouTube ↗</a><p id="music-fallback" class="fallback"></p></div><ol class="song-queue" id="song-queue" aria-label="Choose a Ganesh song"></ol></div><p class="music-credit">Player: <a href="https://github.com/sampotts/plyr" target="_blank" rel="noopener noreferrer">Plyr · open source (MIT)</a>. Music: official YouTube uploads from T-Series Bhakti Sagar and Times Music Spiritual. Internet required; songs retain their original copyrights.</p></section><div id="live" role="status" aria-live="polite"></div>
+<div class="controls"><div class="caption">New beginnings. Old friends. Endless modaks.<small>Flowers in the air, joy in every window. Bappa has arrived.</small></div><div class="buttons"><button class="primary" id="flowers">✿ Shower flowers</button><button id="pause" aria-pressed="false">Ⅱ Pause</button><button id="evening" aria-pressed="false">☾ Evening lights</button></div></div><section id="music-library" class="jukebox" aria-label="Ganpati music playlist"><h2>Bappa’s welcome playlist ♫</h2><p>16 tracks, seven moods. Pick a mood above; next and repeat follow your selection.</p><div class="jukebox-layout"><div class="player-shell"><div id="ganpati-player" class="plyr__video-embed"><iframe title="Official Ganesh music player" src="https://www.youtube.com/embed/RCCYorPLJmQ?enablejsapi=1&amp;playsinline=1&amp;rel=0&amp;autoplay=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div id="now-playing">Deva Shree Ganesha</div><p id="music-status" class="play-status" role="status" aria-live="polite">Tap Play music at the top to begin.</p><div class="music-actions"><button id="music-prev" aria-label="Previous song">↤ Previous</button><button class="primary" id="music-play">▶ Play music</button><button id="music-next" aria-label="Next song">Next ↦</button><label class="loop-label"><input type="checkbox" id="queue-loop" checked>Repeat playlist</label></div><a class="source-link" id="music-source" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=4_gzjySeVTA">Open this song on YouTube ↗</a><p id="music-fallback" class="fallback"></p></div><ol class="song-queue" id="song-queue" aria-label="Choose a Ganesh song"></ol></div><p class="music-credit">Player: <a href="https://github.com/sampotts/plyr" target="_blank" rel="noopener noreferrer">Plyr · open source (MIT)</a>. Music: YouTube uploads from Sony Music India, T-Series, Times Music Spiritual, and Aaradhya Dhol-Tasha Pathak. Internet required; songs retain their original copyrights.</p><p class="music-credit">Dhol Tasha: Aaradhya Dhol-Tasha Pathak · <a href="https://www.youtube.com/watch?v=tpfJfIF-QZA" target="_blank" rel="noopener noreferrer">Source</a> · <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a>.</p></section><div id="live" role="status" aria-live="polite"></div>
 </main><footer>Made of little details & big celebrations · गणपती बाप्पा मोरया</footer>
 <script>
 (()=>{'use strict';
@@ -95,30 +101,82 @@ const pause=document.getElementById('pause');pause.onclick=()=>{const on=svg.cla
 <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.js"></script>
 <script>
 (()=>{'use strict';
-const tracks=[{"title": "Shendur Laal Chadhayo", "artist": "Ravindra Sathe · Vaastav", "start": 0, "end": 191, "video": "4_gzjySeVTA"}, {"title": "Jai Ganesh Jai Ganesh", "artist": "Anuradha Paudwal", "start": 191, "end": 463, "video": "4_gzjySeVTA"}, {"title": "Sukh Karta Dukh Harta Ganpati Deva", "artist": "Hemant Chauhan", "start": 463, "end": 798, "video": "4_gzjySeVTA"}, {"title": "Siddhivinayak Jai Ganpati", "artist": "Lakhbir Singh Lakkha", "start": 798, "end": 1152, "video": "4_gzjySeVTA"}, {"title": "Ganpati Bapa Utarun Preme Aarti", "artist": "Hemant Chauhan & ensemble", "start": 1152, "end": 1455, "video": "4_gzjySeVTA"}, {"title": "Shri Ganpati Ji Ki Aarti", "artist": "Anuradha Paudwal", "start": 1455, "end": 1804, "video": "4_gzjySeVTA"}, {"title": "Jai Ganesh Gauri Nandan", "artist": "Hemant Chauhan & Kirti Sood", "start": 1804, "end": 2056, "video": "4_gzjySeVTA"}, {"title": "Sukhkarta Dukhharta", "artist": "Anuradha Paudwal · Marathi aarti", "start": 2056, "end": 2189, "video": "4_gzjySeVTA"}, {"title": "Jay Siddhivinayak", "artist": "Hemant Chauhan & ensemble", "start": 2189, "end": 2376, "video": "4_gzjySeVTA"}, {"title": "Jai Ganpati Deva", "artist": "Hemant Chauhan & ensemble", "start": 2376, "end": null, "video": "4_gzjySeVTA"}, {"title": "Shree Ganeshaya Dheemahi", "artist": "Shankar Mahadevan · Ajay–Atul", "start": 0, "end": null, "video": "eVTlZk4YNH4"}, {"title": "Gaiye Ganapati Jagvandan", "artist": "Jagjit Singh", "start": 0, "end": null, "video": "aASYnk-eaXI"}];
-const queue=document.getElementById('song-queue'),status=document.getElementById('music-status'),play=document.getElementById('music-play'),source=document.getElementById('music-source');
-let index=0,player=null,ready=false,changing=false,activeVideo=tracks[0].video,pendingPlay=true,watchdog;
-const buttons=tracks.map((track,i)=>{const li=document.createElement('li'),button=document.createElement('button'),n=document.createElement('span'),label=document.createElement('span'),artist=document.createElement('small');n.className='number';n.textContent=String(i+1).padStart(2,'0');label.textContent=track.title;artist.textContent=track.artist;label.append(artist);button.append(n,label);button.onclick=()=>select(i,true);li.append(button);queue.append(li);return button;});
-function update(){const t=tracks[index];document.getElementById('now-playing').textContent=t.title;source.href='https://www.youtube.com/watch?v='+t.video+'&t='+t.start+'s';buttons.forEach((b,i)=>b.setAttribute('aria-current',String(i===index)));}
-function requestPlay(){pendingPlay=true;if(!ready){status.textContent='Music is connecting. You can also use the Play button inside the video.';return;}try{const result=player.play();if(result&&result.catch)result.catch(()=>{status.textContent='Tap Play music once to enable sound.';});}catch{status.textContent='Tap Play inside the video to begin.';}}
-function select(i,autoplay){index=(i+tracks.length)%tracks.length;update();pendingPlay=autoplay;if(!player||!ready){status.textContent='Connecting to music…';return;}changing=true;status.textContent='Loading '+tracks[index].title+'…';const t=tracks[index];if(t.video===activeVideo){player.currentTime=t.start;changing=false;if(autoplay)requestPlay();}else{ready=false;activeVideo=t.video;player.source={type:'video',title:t.title,sources:[{src:t.video,provider:'youtube'}]};}}
-function next(){if(index===tracks.length-1&&!document.getElementById('queue-loop').checked){player.pause();pendingPlay=false;status.textContent='Playlist complete. Ganpati Bappa Morya!';play.textContent='▶ Play again';return;}select(index+1,true);}
-document.getElementById('music-prev').onclick=()=>select(index-1,true);document.getElementById('music-next').onclick=()=>select(index+1,true);
-play.onclick=()=>{if(ready&&player.playing){pendingPlay=false;player.pause();}else if(ready&&index===tracks.length-1&&player.ended){select(0,true);}else requestPlay();};
-update();
-if(location.protocol==='file:'){document.getElementById('music-fallback').textContent='If YouTube reports error 153, it requires this page to be served over HTTP/HTTPS. “Open this song on YouTube” works directly.';}
-if(!window.Plyr){status.textContent='The playlist controls could not load. Use the embedded video or open the song on YouTube.';return;}
-player=new Plyr('#ganpati-player',{autoplay:true,playsinline:true,volume:.65,controls:['play-large','play','progress','current-time','mute','volume','fullscreen'],youtube:{noCookie:false,rel:0},resetOnEnd:false});
-player.on('ready',()=>{ready=true;changing=false;clearTimeout(watchdog);player.currentTime=tracks[index].start;status.textContent='Ready. Tap Play music if your browser is waiting for permission to play sound.';if(pendingPlay)requestPlay();});
-player.on('playing',()=>{clearTimeout(watchdog);play.textContent='Ⅱ Pause music';status.textContent='Playing '+(index+1)+' of '+tracks.length+' · '+tracks[index].artist;});
-player.on('pause',()=>{play.textContent='▶ Play music';});
-player.on('ended',()=>{if(!changing)next();});
-// The first ten entries are chapter positions in one official audio jukebox.
-// Let that video run continuously, updating the selected song as chapters pass.
-player.on('timeupdate',()=>{if(!ready||changing||activeVideo!=='4_gzjySeVTA')return;const time=player.currentTime;const chapter=tracks.findIndex(t=>t.video===activeVideo&&time>=t.start&&(t.end===null||time<t.end));if(chapter>=0&&chapter!==index){index=chapter;update();if(player.playing)status.textContent='Playing '+(index+1)+' of '+tracks.length+' · '+tracks[index].artist;}});
-player.on('error',()=>{status.textContent='YouTube could not play this selection here. Try Next or open it on YouTube.';play.textContent='▶ Retry';});
-watchdog=setTimeout(()=>{if(!ready)status.textContent='Music is taking longer to connect. Check your internet connection, try the video’s Play button, or open it on YouTube.';},15000);
+const tracks=[{"title": "Deva Shree Ganesha", "artist": "Ajay Gogavale · Agneepath · Sony Music India", "video": "RCCYorPLJmQ", "start": 0, "end": null, "moods": ["Bollywood", "Rocking", "Festival"]}, {"title": "Sadda Dil Vi Tu (Ga Ga Ga Ganpati)", "artist": "Hard Kaur · ABCD · Sony Music India", "video": "lEo1RvqJOcY", "start": 0, "end": null, "moods": ["Bollywood", "Rocking", "Festival"]}, {"title": "Shendur Laal Chadhayo", "artist": "Ravindra Sathe · Vaastav", "start": 0, "end": 191, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival", "Bollywood"]}, {"title": "Jai Ganesh Jai Ganesh", "artist": "Anuradha Paudwal", "start": 191, "end": 463, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Sukh Karta Dukh Harta Ganpati Deva", "artist": "Hemant Chauhan", "start": 463, "end": 798, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Siddhivinayak Jai Ganpati", "artist": "Lakhbir Singh Lakkha", "start": 798, "end": 1152, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Ganpati Bapa Utarun Preme Aarti", "artist": "Hemant Chauhan & ensemble", "start": 1152, "end": 1455, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Shri Ganpati Ji Ki Aarti", "artist": "Anuradha Paudwal", "start": 1455, "end": 1804, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Jai Ganesh Gauri Nandan", "artist": "Hemant Chauhan & Kirti Sood", "start": 1804, "end": 2056, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Sukhkarta Dukhharta", "artist": "Anuradha Paudwal · Marathi aarti", "start": 2056, "end": 2189, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Jay Siddhivinayak", "artist": "Hemant Chauhan & ensemble", "start": 2189, "end": 2376, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Jai Ganpati Deva", "artist": "Hemant Chauhan & ensemble", "start": 2376, "end": null, "video": "4_gzjySeVTA", "moods": ["Devotional", "Festival"]}, {"title": "Shree Ganeshaya Dheemahi", "artist": "Shankar Mahadevan · Ajay–Atul", "start": 0, "end": null, "video": "eVTlZk4YNH4", "moods": ["Devotional", "Festival", "Rocking"]}, {"title": "Gaiye Ganapati Jagvandan", "artist": "Jagjit Singh", "start": 0, "end": null, "video": "aASYnk-eaXI", "moods": ["Devotional", "Meditation"]}, {"title": "Puneri Dhol Tasha", "artist": "Aaradhya Dhol-Tasha Pathak", "video": "tpfJfIF-QZA", "start": 0, "end": null, "moods": ["Dhol-tasha", "Rocking", "Festival"]}, {"title": "Om Gan Ganpataye Namo Namah", "artist": "Suresh Wadkar · Ganesh Mantra · T-Series", "video": "YArclZ-2IeU", "start": 0, "end": null, "moods": ["Mantra", "Meditation", "Devotional"]}];
+const $=id=>document.getElementById(id);
+const moods=['All','Devotional','Dhol-tasha','Rocking','Bollywood','Meditation','Mantra','Festival'];
+const playButtons=[$('top-music-play'),$('music-play')];
+let index=0,mood='All',player=null,ready=false,pendingPlay=false,activeVideo=tracks[0].video;
+let seekingStart=null,finished=false,failed=false,watchdog;
+const filtered=()=>tracks.map((t,i)=>i).filter(i=>mood==='All'||tracks[i].moods.includes(mood));
+function message(text){$('music-status').textContent=text;$('top-music-status').textContent=text;}
+function sync(playing){playButtons.forEach(button=>{button.textContent=playing?'Ⅱ Pause music':'▶ Play music';button.setAttribute('aria-label',playing?'Pause music':'Play music');button.setAttribute('aria-pressed',String(playing));});}
+const rows=tracks.map((track,i)=>{
+ const li=document.createElement('li'),button=document.createElement('button'),n=document.createElement('span'),label=document.createElement('span'),artist=document.createElement('small');
+ n.className='number';n.textContent=String(i+1).padStart(2,'0');label.textContent=track.title;
+ artist.textContent=track.artist+' · '+track.moods.join(' / ');label.append(artist);button.append(n,label);
+ button.onclick=()=>select(i,true);li.append(button);$('song-queue').append(li);return {li,button};
+});
+const moodButtons=moods.map(name=>{
+ const button=document.createElement('button');button.textContent=name;button.setAttribute('aria-pressed',String(name===mood));
+ button.onclick=()=>{const resume=pendingPlay||Boolean(player&&player.playing);mood=name;render();const ids=filtered();if(!ids.includes(index))select(ids[0],resume);};
+ $('mood-filters').append(button);return button;
+});
+function render(){
+ const t=tracks[index];$('now-playing').textContent=t.title;$('top-song-title').textContent=t.title;
+ $('music-source').href='https://www.youtube.com/watch?v='+t.video+'&t='+t.start+'s';
+ const ids=filtered();rows.forEach(({li,button},i)=>{li.hidden=!ids.includes(i);button.setAttribute('aria-current',String(i===index));});
+ moodButtons.forEach((b,i)=>b.setAttribute('aria-pressed',String(moods[i]===mood)));
+}
+function armWatchdog(){clearTimeout(watchdog);watchdog=setTimeout(()=>{if(!ready)message('Music is still connecting. Try the video player below or open this song on YouTube.');},15000);}
+function requestPlay(){
+ pendingPlay=true;finished=false;
+ if(!player){message('The music player could not load. Use the video below or open this song on YouTube.');return;}
+ if(!ready){message('Connecting… music will start when ready. Tap again to cancel.');playButtons.forEach(b=>b.textContent='Cancel music');return;}
+ if(failed){failed=false;ready=false;player.source={type:'video',sources:[{src:tracks[index].video,provider:'youtube'}]};armWatchdog();return;}
+ try{const result=player.play();if(result&&result.catch)result.catch(()=>{sync(false);message('Tap Play music again to enable sound.');});}catch{sync(false);message('Tap Play in the video player below to begin.');}
+}
+function applySelection(){
+ const t=tracks[index];
+ if(activeVideo!==t.video){ready=false;activeVideo=t.video;seekingStart=null;player.source={type:'video',title:t.title,sources:[{src:t.video,provider:'youtube'}]};armWatchdog();return;}
+ seekingStart=t.start;player.currentTime=t.start;
+ if(pendingPlay)requestPlay();else{player.pause();sync(false);message('Ready · tap Play music to begin.');}
+}
+function select(i,start){index=i;finished=false;failed=false;pendingPlay=start;render();sync(false);message('Loading '+tracks[index].title+'…');if(ready)applySelection();}
+function advance(direction=1,automatic=false){
+ const ids=filtered(),pos=ids.indexOf(index);
+ if(automatic&&pos===ids.length-1&&!$('queue-loop').checked){pendingPlay=false;finished=true;player.pause();sync(false);message('Playlist complete. Ganpati Bappa Morya!');return;}
+ select(ids[(pos+direction+ids.length)%ids.length],true);
+}
+function toggle(){
+ if(player&&ready&&player.playing){pendingPlay=false;player.pause();sync(false);message('Music paused.');}
+ else if(!ready&&pendingPlay){pendingPlay=false;sync(false);message('Music start cancelled.');}
+ else if(finished)select(filtered()[0],true);
+ else requestPlay();
+}
+playButtons.forEach(b=>b.onclick=toggle);
+$('music-prev').onclick=()=>advance(-1);$('music-next').onclick=()=>advance();$('top-music-next').onclick=()=>advance();
+render();sync(false);message('Tap Play music to welcome Bappa with music.');
+if(location.protocol==='file:')$('music-fallback').textContent='For embedded music, use the hosted website or the included local launcher. You can also open any song on YouTube.';
+if(!window.Plyr){message('Music controls could not load. Use the video below or open this song on YouTube.');return;}
+player=new Plyr('#ganpati-player',{autoplay:false,playsinline:true,volume:.65,controls:['play-large','play','progress','current-time','mute','volume','fullscreen'],youtube:{noCookie:false,rel:0},resetOnEnd:false});
+player.on('ready',()=>{ready=true;clearTimeout(watchdog);applySelection();});
+player.on('playing',()=>{if(!ready)return;pendingPlay=true;failed=false;sync(true);message('Playing · '+tracks[index].artist);});
+player.on('pause',()=>{sync(false);if(ready){pendingPlay=false;message('Music paused.');}});
+player.on('ended',()=>{if(ready&&!finished){seekingStart=null;advance(1,true);}});
+player.on('timeupdate',()=>{
+ if(!ready||failed||activeVideo!==tracks[index].video)return;
+ const time=player.currentTime;
+ // Ignore old time events until the requested chapter seek has taken effect.
+ if(seekingStart!==null){if(Math.abs(time-seekingStart)>3)return;seekingStart=null;}
+ const t=tracks[index];
+ if(t.end!==null&&time>=t.end&&player.playing){advance(1,true);return;}
+ // A manual backward seek in the collection updates the highlighted chapter.
+ if(time<t.start-1){const chapter=tracks.findIndex(v=>v.video===activeVideo&&time>=v.start&&(v.end===null||time<v.end));if(chapter>=0&&filtered().includes(chapter)){index=chapter;render();}}
+});
+player.on('error',()=>{failed=true;pendingPlay=false;sync(false);clearTimeout(watchdog);message('This song could not play here. Try Next or open it on YouTube below.');});
+armWatchdog();
 })();
+
 </script>
 
 </body></html>
